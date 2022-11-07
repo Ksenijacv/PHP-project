@@ -1,6 +1,18 @@
 <?php
+session_start();
+
+if (!isset($_SESSION['current_user'])) {
+    header('Location: index.php');
+    exit();
+}
+
 require "dbBroker.php"; 
+require "model/Korisnik.php";
+require "model/brod.php";
+require "model/luka.php";
+
 ?>
+
 
 <!doctype html>
 <html lang="en">
@@ -11,8 +23,8 @@ require "dbBroker.php";
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Evidencija luka i brodova </title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    
 </head>
-
 <body>
 
 <div class="header">
@@ -23,10 +35,10 @@ require "dbBroker.php";
     <div class="navigacija d-flex justify-content-between">
         <ul class="nav" id="navigacija-lista" >
             <li class="nav-item">
-                <a class="nav-link" aria-current="page" >Početna</a>
+                <a class="nav-link" aria-current="page" href="pocetna.php">Početna</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="">Brodovi</a>
+                <a class="nav-link" href="">Brodovi</a> 
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="">Luke</a>
@@ -35,14 +47,15 @@ require "dbBroker.php";
                 <a class="nav-link" href="">Nalog</a>
             </li>
             <li class="nav-item">
-                <p class="">Prijavljen na sistem: ></p>
+                <p class="">Prijavljen na sistem: <?=$_SESSION['current_user']?></p> 
             </li>
         </ul>
         <div>
-            <a class="btn btn-danger" href="" >Odjavi se</a>
+            <a class="btn btn-danger" href="">Odjavi se</a> 
         </div>
     </div>
 </div>
+
 
 <div class="pocetnaStranaSadrzaj">
 
@@ -58,21 +71,35 @@ require "dbBroker.php";
         </div>
     </div>
 
-    
+    <div class="row row-cols-1 row-cols-sm-2 g-3 justify-content-center">
+        <?php
+        $luke=Luka::getAll($konekcija);
+        while (($luka=$luke->fetch_assoc())!=null){?>
 
-</div>
 
-<div class="row row-cols-1 row-cols-sm-2 g-3 justify-content-center">
-                <form method="post"  class="col">
+                <form method="post" action="luka.php"  class="col"> 
                     <div class="card" style="background-color: rgba(42,57,89,0.87); width: 35vw; margin-left: auto; margin-right: auto">
                         <div class="card-body">
-                           <!--Kasnije ce se ovde napraviti prikaz koji brodovi su u kojoj luci -->
+                            <input type="hidden" name="id_luke" value="<?=$luka['id']?>" >
+                            <h5 class="card-title"><?=$luka['nazivLuke']?></h5>
+                            <?php $brod=Brod::getBrod($luka['brod_id'],$konekcija)[0]?>
+                            <p class="card-text">Brod: <?=$brod['nazivBroda']." ".$brod['zemljaPorekla']?></p>                                     
+                            <p class="card-text">Naziv Luke: <?=$luka['nazivLuke']?></p>
+                            <p class="card-text">Grad: <?=$luka['grad']?></p>                     
+                            <?php $korisnikK=Korisnik::getKorisnik($luka['korisnik_id'],$konekcija)[0]?>
+                            <p class="card-text">Korisnik dodao: <?=$korisnikK['username']?></p> //dodati ceo ovaj blok
                             <button type="submit" class="btn btn-primary">Pogledaj</button>
                         </div>
                     </div>
                 </form>
 
+
+        <?php }
+        ?>
     </div>
+
+</div>
+
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
