@@ -38,20 +38,20 @@ require "model/luka.php";
                 <a class="nav-link" aria-current="page" href="pocetna.php">Početna</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="">Brodovi</a> 
+                <a class="nav-link" href="brod.php">Brodovi</a> 
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="">Luke</a>
+                <a class="nav-link" href="luka.php">Luke</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="">Nalog</a>
+                <a class="nav-link" href="nalog.php">Nalog</a>
             </li>
             <li class="nav-item">
                 <p class="">Prijavljen na sistem: <?=$_SESSION['current_user']?></p> 
             </li>
         </ul>
         <div>
-            <a class="btn btn-danger" href="">Odjavi se</a> 
+            <a class="btn btn-danger" href="odjava.php">Odjavi se</a> 
         </div>
     </div>
 </div>
@@ -87,7 +87,7 @@ require "model/luka.php";
                             <p class="card-text">Naziv Luke: <?=$luka['nazivLuke']?></p>
                             <p class="card-text">Grad: <?=$luka['grad']?></p>                     
                             <?php $korisnikK=Korisnik::getKorisnik($luka['korisnik_id'],$konekcija)[0]?>
-                            <p class="card-text">Korisnik dodao: <?=$korisnikK['username']?></p> //dodati ceo ovaj blok
+                            <p class="card-text">Korisnik dodao: <?=$korisnikK['username']?></p> 
                             <button type="submit" class="btn btn-primary">Pogledaj</button>
                         </div>
                     </div>
